@@ -1,0 +1,144 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<algorithm>
+using namespace std;
+int visited[100000] = { 0 };
+int m, n;
+vector<int>a[100000];
+struct ArcNode
+{
+	int data;
+	ArcNode* next;
+};
+struct HNode
+{
+	int data;
+	ArcNode* adjacent;
+};
+struct Graph
+{
+    int points = 0, arms = 0;
+    vector<HNode*> links;
+    Graph(int n = 0) : points(n), arms(0), links(n + 2, nullptr) {}
+};
+void DFS(Graph&G)
+{
+	stack<int>S;
+	S.push(1);
+	while (!S.empty())
+	{
+		if (visited[S.top()] == 0)
+		{
+			cout << S.top() << " ";
+			visited[S.top()] = 1;
+		}
+		ArcNode* p = G.links[S.top()]->adjacent;
+		S.pop();
+		vector<int> a;
+		while (p)
+		{
+			if (visited[p->data] == 0)
+			{
+				a.push_back(p->data);
+			}
+			p = p->next;
+		}
+		//reverse(a.begin(), a.end());
+		for (int i : a)
+		{
+			S.push(i);
+		}
+	}
+}
+void BFS(Graph& G)
+{
+	queue<int>Q;
+	Q.push(1);
+	while (!Q.empty())
+	{
+		if (visited[Q.front()] == 0)
+		{
+			cout << Q.front() << " ";
+			visited[Q.front()] = 1;
+		}
+		ArcNode* p = G.links[Q.front()]->adjacent;
+		Q.pop();
+		vector<int>a;
+		while (p)
+		{
+			if (visited[p->data] == 0)
+			{
+				a.push_back(p->data);
+			}
+			p = p->next;
+		}
+		reverse(a.begin(), a.end());
+		for (int i : a)
+		{
+			Q.push(i);
+		}
+	}
+}
+void f2(ArcNode* head)
+{
+	if (head != NULL)
+	{
+		if (head->next != NULL)
+		{
+			delete head->next;
+		}
+		delete head;
+	}
+}
+void f(Graph& G)
+{
+	for (int i = 1; i <= n; i++)
+	{
+		f2(G.links[i]->adjacent);
+		delete G.links[i];
+	}
+}
+int main()
+{
+	cin >> n;
+	cin >> m;
+	Graph G(n);
+	G.points = n;
+	G.arms = m;
+	for (int i = 1; i <= n; i++)
+	{
+		G.links[i] = new HNode;
+		G.links[i]->data = i;
+		G.links[i]->adjacent = NULL;
+	}
+	for (int i = 1; i <= m; i++)
+	{
+		int u, v;
+		cin >> u >> v;
+		a[u].push_back(v);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		sort(a[i].begin(), a[i].end());
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j : a[i])
+		{
+			ArcNode* temp = new ArcNode;
+			temp->data = j;
+			temp->next = G.links[i]->adjacent;
+			G.links[i]->adjacent = temp;
+		}
+	}
+	DFS(G);
+	for (int i = 1; i <= n; i++)
+	{
+		visited[i] = 0;
+	}
+	cout << "\n";
+	BFS(G);
+	f(G);
+}
