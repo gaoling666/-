@@ -1,1 +1,123 @@
 扩展二叉树的非递归建立及中，后跟遍历
+#include<iostream>
+#include<vector>
+#include<stack>
+using namespace std;
+int n, flag = 0, temp;
+struct treeNode
+{
+	int data;
+	int v = 0;
+	int u = 0;
+	int ileft = 0;
+	treeNode* left=NULL;
+	treeNode* right=NULL;
+};
+stack<treeNode*>S1, S2, S3;
+vector<int>a;
+void createTree(treeNode*& t)
+{
+	int ans = 0;
+	t = new treeNode;
+	t->data = a[ans++];
+	S3.push(t);
+	while (!S3.empty())
+	{
+		int temp = a[ans++];
+		treeNode* cur = NULL;
+		if (temp != -1)
+		{
+			cur = new treeNode;
+			cur->data = temp;
+		}
+		if (S3.top()->ileft == 0)
+		{
+			S3.top()->left = cur;
+			S3.top()->ileft = 1;
+		}
+		else
+		{
+			S3.top()->right = cur;
+			S3.pop();
+		}
+		if(cur!=NULL) S3.push(cur);
+	}
+}
+void midOrder(treeNode* t)
+{
+	S1.push(t);
+	t->u++;
+	while (!S1.empty())
+	{
+		treeNode* temp = S1.top();
+		S1.pop();
+		if (temp->u == 2)
+		{
+			if (flag++)cout << " ";
+			cout << temp->data;
+		}
+		else
+		{
+			if (temp->right != NULL)
+			{
+				S1.push(temp->right);
+				temp->right->u++;
+			}
+			S1.push(temp);
+			temp->u++;
+			if (temp->left != NULL)
+			{
+				S1.push(temp->left);
+				temp->left->u++;
+			}
+		}
+	}
+}
+void houOrder(treeNode* t)
+{
+	S2.push(t);
+	t->v++;
+	while (!S2.empty())
+	{
+		treeNode* temp = S2.top();
+		S2.pop();
+		if (temp->v == 2)
+		{
+			if (flag++)cout << " ";
+			cout << temp->data;
+		}
+		else
+		{
+			S2.push(temp);
+			temp->v++;
+			if (temp->right != NULL) {
+				S2.push(temp->right);
+				temp->right->v++;
+			}
+			if (temp->left != NULL) {
+				S2.push(temp->left);
+				temp->left->v++;
+			}
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(nullptr);
+	cin >> n;
+	flag = 0;
+	for (int i = 1; i <= 2 * n + 1; i++)
+	{
+		cin >> temp;
+		a.push_back(temp);
+	}
+	treeNode* root = NULL;
+	createTree(root);
+	midOrder(root);
+	cout << "\n";
+	flag = 0;
+	houOrder(root);
+	cout << "\n";
+	return 0;
+}
