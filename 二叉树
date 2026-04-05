@@ -43,7 +43,7 @@ void createTree(treeNode*& t)
 		if(cur!=NULL) S3.push(cur);
 	}
 }
-void midOrder(treeNode* t)
+void midOrder(treeNode* t)//中跟遍历
 {
 	S1.push(t);
 	t->u++;
@@ -73,7 +73,7 @@ void midOrder(treeNode* t)
 		}
 	}
 }
-void houOrder(treeNode* t)
+void houOrder(treeNode* t)//后跟遍历
 {
 	S2.push(t);
 	t->v++;
@@ -99,6 +99,20 @@ void houOrder(treeNode* t)
 				temp->left->v++;
 			}
 		}
+	}
+}
+}
+void cengcibianli(treeNode* root)//层序遍历
+{
+	Q.push(root);
+	while (!Q.empty())
+	{
+		if (flag++) cout << " ";
+		treeNode* temp = Q.front();
+		Q.pop();
+		cout << temp->data;
+		if(temp->right!=NULL) Q.push(temp->right);
+		if(temp->left!=NULL) Q.push(temp->left);
 	}
 }
 int main()
