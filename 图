@@ -1,3 +1,6 @@
+##
+邻接表法储存图并实现DFS，BFS
+##
 #include<iostream>
 #include<vector>
 #include<stack>
@@ -141,4 +144,66 @@ int main()
 	cout << "\n";
 	BFS(G);
 	f(G);
+}
+
+##
+朴素Dijskstra实现有权最短路径的寻找
+##
+#include<iostream>
+#include<vector>
+#include<limits>
+using namespace std;
+int n, m, s, flag=1;
+int MAX = INT_MAX;
+vector<vector<pair<int,int>>>t;
+vector<int>dist;
+vector<int>visited;
+void Dijkstra()
+{
+	int u = s;
+	while (flag)
+	{
+		visited[u] = 1;
+		flag = 0;
+		for (int i = 0; i < t[u].size(); i++)
+		{
+			int temp1 = t[u][i].first;
+			int temp2 = t[u][i].second;
+			if (visited[temp1]==0&&dist[u] + temp2 < dist[temp1])
+			{
+				dist[temp1] = dist[u] + temp2;
+			}
+		}
+		int max = MAX;
+		int index;
+		for (int i = 1; i <= n; i++)
+		{
+			if (visited[i] == 0 && max > dist[i])
+			{
+				max = dist[i];
+				u = i;
+				flag = 1;
+			}
+		}
+	}
+}
+int main()
+{
+	cin >> n >> m >> s;
+	t.resize(n+1);
+	dist.resize(n + 1, MAX);
+	visited.resize(n + 1,0);
+	dist[s] = 0;
+	for (int i = 0; i < m; i++)
+	{
+		int temp1, temp2, temp3;
+		cin >> temp1 >> temp2 >> temp3;
+		t[temp1].push_back({ temp2, temp3 });
+	}
+	Dijkstra();
+	for (int i = 1; i <= n; i++)
+	{
+		cout << dist[i] << " ";
+	}
+	return 0;
 }
