@@ -207,3 +207,70 @@ int main()
 	}
 	return 0;
 }
+##
+Floyd实现图两个顶点之间最短路径的查找
+##
+#include<iostream>
+#include<vector>
+#include<climits>
+using namespace std;
+int u, v, w, n, m;
+const int MAX = 1e6;
+vector<vector<int>>t;
+vector<vector<int>>path;
+void Floyd()
+{
+	for (int k = 1; k <= n; k++)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			if (i != k)
+			{
+				for (int j = 1; j <= n; j++)
+				{
+					if (t[i][k] + t[k][j] < t[i][j])
+					{
+						t[i][j] = t[i][k] + t[k][j];
+						path[i][j] = path[k][j];
+					}
+				}
+			}
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+	cin >> n >> m;
+	t.resize(n+1,vector<int>(n+1,MAX));
+	path.resize(n + 1, vector<int>(n + 1,-1));
+	for (int i = 0; i < m; i++)
+	{
+		cin >> u >> v >> w;
+		t[u][v] = w;
+		t[v][u] = w;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		t[i][i] = 0;
+		for (int j = 1; j <= n; j++)
+		{
+			if (i != j)
+			{
+				path[i][j] = i;
+			}
+		}
+	}
+	Floyd();
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cout << t[i][j] << " ";
+		}
+		cout << "\n";
+	}
+	return 0;
+}
