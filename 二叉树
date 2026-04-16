@@ -1,4 +1,6 @@
+##
 扩展二叉树的非递归建立及中，后跟遍历
+##
 #include<iostream>
 #include<vector>
 #include<stack>
@@ -133,5 +135,56 @@ int main()
 	flag = 0;
 	houOrder(root);
 	cout << "\n";
+	return 0;
+}
+##
+并查集实现
+##
+#include<iostream>
+#include<vector>
+using namespace std;
+vector<int>f;
+int n, m, p;
+int find(int x)
+{
+	if (f[x] < 0) return x;
+	else return f[x] = find(f[x]);
+}
+void Union(int x, int y)
+{
+	int temp1 = find(x);
+	int temp2 = find(y);
+	if (temp1 == temp2)return;
+	if (f[temp1] < f[temp2]) f[temp2] = temp1;
+	else if (f[temp1] > f[temp2]) f[temp1] = temp2;
+	else
+	{
+		f[temp1] = temp2;
+		f[temp2]--;
+	}
+}
+int main()
+{
+	cin >> n;
+	cin >> m;
+	cin >> p;
+	f.resize(n + 1);
+	for (int i = 1; i <= n; i++)
+	{
+		f[i] = -1;
+	}
+	for (int i = 0; i < m; i++)
+	{
+		int temp1, temp2;
+		cin >> temp1 >> temp2;
+		Union(temp1, temp2);
+	}
+	for (int i = 0; i < p; i++)
+	{
+		int temp1, temp2;
+		cin >> temp1 >> temp2;
+		if (find(temp1) == find(temp2)) cout << "Yes\n";
+		else cout << "No\n";
+	}
 	return 0;
 }
